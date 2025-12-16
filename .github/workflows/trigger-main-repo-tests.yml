@@ -1,0 +1,23 @@
+name: Trigger Downstream Tests
+
+on:
+  push:
+    branches:
+      - main # This workflow will run when you push to the 'main' branch
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger tests in the automation repository
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          # Requires a fine-grained PAT with 'Repository permissions > Contents: Read and write' on the target repo.
+          # This secret must be created in the "dummy dev repo" settings.
+          token: ${{ secrets.AUTOMATION_REPO_PAT }}
+          
+          # The target repository where your tests live.
+          repository: TheHoneyBadger13/Automation-Porfolio
+          
+          # The custom event name that your test workflows are listening for.
+          event-type: run-regression-tests
